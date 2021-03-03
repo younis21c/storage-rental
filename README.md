@@ -1,6 +1,3 @@
-![자율주행사진](https://user-images.githubusercontent.com/78134019/109453737-2470fe00-7a96-11eb-95b6-9e6c3ad1b08c.jpg)
-
-
 
 # 서비스 시나리오
 
@@ -51,7 +48,7 @@
 
 
 ## Event Storming 결과
-* MSAEz 로 모델링한 이벤트스토밍 결과:  http://www.msaez.io/#/storming/AYDToXSmsXY4cguxhLA9jTpgvGc2/every/663e27e6ef252865a609e90c5e01f243
+* MSAEz 로 모델링한 이벤트스토밍 결과:  http://www.msaez.io/#/storming/vR9WqhlS6chqQTFb8irp9osAHFv2/mine/16d6bba6ce50b1ba59ad87967b6df21a
 
 
 ### 이벤트 도출
