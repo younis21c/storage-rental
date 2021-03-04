@@ -382,48 +382,19 @@ http localhost:8081/택시호출s 휴대폰번호="01012345678" 호출상태="�
 ![고객View](https://user-images.githubusercontent.com/78134019/109483385-80ea1280-7ac2-11eb-9419-bf3ff5a0dbbc.png)
 
 
-## 소스 패키징
-
-- 클라우드 배포를 위해서 다음과 같이 패키징 작업을 하였습니다.
-```
-cd gateway
-mvn clean && mvn package
-cd ..
-cd taxicall
-mvn clean && mvn package
-cd ..
-cd taximanage
-mvn clean && mvn package
-cd ..
-cd taxiassign
-mvn clean && mvn package
-cd ..
-```
-	
-<taxicall>
-	
-![mvn_taxicall](https://user-images.githubusercontent.com/78134019/109744165-31682b80-7c15-11eb-9d94-7bc23efca6b6.png)
-
-<taximanage>
-	
-![mvn_taximanage](https://user-images.githubusercontent.com/78134019/109744195-3b8a2a00-7c15-11eb-9554-1c3ba088af52.png)
-
-<taxiassign>
-	
-![mvn_taxiassign](https://user-images.githubusercontent.com/78134019/109744226-46dd5580-7c15-11eb-8b47-5100ed01e3ae.png)
-
 
 # 클라우드 배포/운영 파이프라인
+
 1. git에서 소스 가져오기
 git clone http://github.com/younis21c/storage-rental
 
 ```
-리소스 그룹명 : skccteam03-rsrcgrp
-클러스터 명 : skccteam03-aks
-레지스트리 명 : skccteam03
+리소스그룹 	skuser17-rsrcgrp
+쿠버네티스(aks)	skuser17-aks
+레지스트리(acr)	skuser17
 ```
 2. Build
-...
+```
 cd gateway
 mvn clean && mvn package
 cd ..
@@ -435,10 +406,10 @@ mvn clean && mvn package
 cd ..
 cd storageassign
 mvn clean && mvn package
-...
+```
 
 3. Dockerlizing, ACR(Azure Container Registry에 Docker Image Push
-...
+```
 cd gateway
 az acr build --registry skuser17 --image skuser17.azurecr.io/gateway:v1 .
  
@@ -451,14 +422,14 @@ az acr build --registry skuser17 --image skuser17.azurecr.io/storagemanage:v1 .
 cd ..
 cd storageassign
 az acr build --registry skuser17 --image skuser17.azurecr.io/storageassign:v1 .
-...
+```
 
 ACR에 정상적으로 push되었음을 확인
 ![ACR](https://user-images.githubusercontent.com/78134087/109987442-f87da300-7d49-11eb-8345-5bba6f3fcca2.JPG)
 
 
 4. Kubernetes에서 Deploy
-...
+```
 cd gateway/kubernetes
 kubectl apply -f deployment.yml --namespace=skuser17ns
 kubectl apply -f service.yaml --namespace=skuser17ns
@@ -477,7 +448,7 @@ cd ../../
 cd storageassign/kubernetes
 kubectl apply -f deployment.yml --namespace=skuser17ns
 kubectl apply -f service.yaml --namespace=skuser17ns
-...
+```
 
 서비스 배포 확인
 ![배포확인](https://user-images.githubusercontent.com/78134087/109987592-1ba85280-7d4a-11eb-8e39-ed2af488f677.JPG)
