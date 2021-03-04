@@ -246,20 +246,19 @@ http localhost:8088/storagecalls
 ```
 # external > StoragemanageService.java
 
-
-package storagecall.external;
+package storagerental.external;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-//@FeignClient(name="taximanage", url="http://localhost:8082", fallback = StoragemanageServiceFallback.class)
-@FeignClient(name="taximanage", url="http://localhost:8082")
+@FeignClient(name="storagemanage", url="http://localhost:8082", fallback = StoragemanageServiceFallback.class)
+//@FeignClient(name="storagemanage", url="http://drivermanage:8080", fallback = StoragemanageServiceFallback.class)
 public interface StoragemanageService {
 
     @RequestMapping(method= RequestMethod.POST, path="/storagemanages")
-    public void storageManageCall( @RequestBody Storagemanage cleanmanage);
+    public void reqDriverassign(@RequestBody Storagemanage storagemanage);
 
 }
 
@@ -271,17 +270,16 @@ StoragemanageService 인터페이스를 구현한 StoragemanageServiceFallback
 # external > StoragemanageServiceFallback.java
 
 
-package storagecall.external;
+package storagerental.external;
 
 import org.springframework.stereotype.Component;
 
 @Component
 public class StoragemanageServiceFallback implements StoragemanageService {
-	 
+		
 	@Override
-	public void storageManageCall( Storagemanage cleanmanage) {
-		// TODO Auto-generated method stub
-		System.out.println("Circuit breaker has been opened. Fallback returned instead. " + cleanmanage.getId());
+	public void reqStorageassign(Storagemanage storagemanage) {
+		System.out.println("Circuit breaker has been opened. Fallback returned instead. " + storagemanage.getId());
 	}
 
 }
