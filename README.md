@@ -319,13 +319,6 @@ http localhost:8081/storagecalls tel="01011115678" location="파주" status="호
 
 
 
-## 정보 조회 / View 조회
-고객은 창고가 할당되는 동안의 내용을 조회 할 수 있습니다.
-
-![고객View](https://user-images.githubusercontent.com/78134019/109483385-80ea1280-7ac2-11eb-9419-bf3ff5a0dbbc.png)
-
-
-
 # 클라우드 배포/운영 파이프라인
 
 1. git에서 소스 가져오기
