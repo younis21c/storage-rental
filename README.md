@@ -112,6 +112,10 @@
 3. 창고 자동 할당이 완료된다.(ok)
 4. 신청상태 및 할당상태를 갱신한다.(ok)
 5. 고객이 상태변경을 확인한다.(ok)
+![1호출](https://user-images.githubusercontent.com/78134087/109931142-d107e580-7d0b-11eb-9d16-8259d8d384a6.JPG)
+![2호출확정-manage](https://user-images.githubusercontent.com/78134087/109931153-d402d600-7d0b-11eb-991b-4c4ae84133d1.JPG)
+
+
 
 #### 취소case (blue)
 1. 고객이 신청한 창고대여를 취소요청한다.(ok)
@@ -119,6 +123,10 @@
 3. 창고 할당이 취소된다.(ok)
 4. 취소상태로 갱신한다.(ok)
 5. 고객이 상태변경을 확인한다.(ok)
+
+![2-1호출취소](https://user-images.githubusercontent.com/78134087/109931164-d9602080-7d0b-11eb-925c-e6697a59ece5.JPG)
+![2-2호출취소확정-mana](https://user-images.githubusercontent.com/78134087/109931171-db29e400-7d0b-11eb-8151-a47dffa50750.JPG)
+
 
 #### 확인case (black)
 1. 고객이 신청 진행내역을 볼 수 있어야 한다. (ok) 
@@ -184,7 +192,8 @@ msaez.io 를 통해 구현한 Aggregate 단위의 Entity 선언 후, 구현을 �
 
 Entity Pattern 과 Repository Pattern 을 적용하기 위해 Spring Data REST 의 RestRepository 를 적용하였다.
 
-![ddd적용](https://user-images.githubusercontent.com/78134087/109929765-2fcc5f80-7d0a-11eb-88b5-2e6591d7fcfb.JPG)
+![ddd적용](https://user-images.githubusercontent.com/78134087/109931222-eaa92d00-7d0b-11eb-977c-234cc0030dab.JPG)
+
 
 
 
