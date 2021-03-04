@@ -311,12 +311,12 @@ http localhost:8081/storagecalls tel="01011115678" location="파주" status="호
 
 창고 관리 (storage manage) 이후 창고 할당(storage assign) 은 비동기식 처리이므로, 
 창고 신청 (storage call) 의 서비스 호출에는 영향이 없도록 구성
- 
-고객이 창고 신청(Storagecall) 후 서비스 진행은 정상이나 호출확정이 되지 않고  
-창고 할당(StorageAssign)이 정상적이지 않아 으므로 진행중으로 남게 됨
 
 <창고 신청 Storage call>
-![pubsub1](https://user-images.githubusercontent.com/78134087/110006595-2fa97f80-7d5d-11eb-85c9-0bc9d78a61c8.JPG)
+창고 할당(storage assign) 서비스를 중단 후 창고신청
+
+![pubsub1](https://user-images.githubusercontent.com/78134087/110007201-ca09c300-7d5d-11eb-9e12-1ac9cfab8b85.JPG)
+
 
 
 ## 정보 조회 / View 조회
