@@ -443,43 +443,43 @@ http localhost:8081/택시호출s 휴대폰번호="01012345678" 호출상태="�
 
 ## 소스 패키징
 
-- 클라우드 배포를 위해서 다음과 같이 패키징 작업을 하였습니다.
+- 클라우드 배포를 위한 패키징 작업.
 ```
 cd gateway
 mvn clean && mvn package
 cd ..
-cd taxicall
+cd storagecall
 mvn clean && mvn package
 cd ..
-cd taximanage
+cd storagemanage
 mvn clean && mvn package
 cd ..
-cd taxiassign
+cd storageassign
 mvn clean && mvn package
 cd ..
 ```
 	
-<taxicall>
+<storagecall>
 	
 ![mvn_taxicall](https://user-images.githubusercontent.com/78134019/109744165-31682b80-7c15-11eb-9d94-7bc23efca6b6.png)
 
-<taximanage>
+<storagemanage>
 	
 ![mvn_taximanage](https://user-images.githubusercontent.com/78134019/109744195-3b8a2a00-7c15-11eb-9554-1c3ba088af52.png)
 
-<taxiassign>
+<storageassign>
 	
 ![mvn_taxiassign](https://user-images.githubusercontent.com/78134019/109744226-46dd5580-7c15-11eb-8b47-5100ed01e3ae.png)
 
 
 # 클라우드 배포/운영 파이프라인
 
-- 애저 클라우드에 배포하기 위해서 다음과 같이 주요 정보를 설정 하였습니다.
+- 애저 클라우드에 배포하기 위한 주요 정보 설정
 
 ```
-리소스 그룹명 : skccteam03-rsrcgrp
-클러스터 명 : skccteam03-aks
-레지스트리 명 : skccteam03
+리소스 그룹명 : skuser17-rsrcgrp
+클러스터 명 : skuser17-aks
+레지스트리 명 : skuser17
 ```
 
 - az login
@@ -495,7 +495,7 @@ cd ..
     "state": "Enabled",
     "tenantId": "6011e3f8-2818-42ea-9a63-66e6acc13e33",
     "user": {
-      "name": "skTeam03@gkn2021hotmail.onmicrosoft.com",
+      "name": "skuser17@gkn2021hotmail.onmicrosoft.com",
       "type": "user"
     }
   }
@@ -503,12 +503,12 @@ cd ..
 
 - 토큰 가져오기
 ```
-az aks get-credentials --resource-group skccteam03-rsrcgrp --name skccteam03-aks
+az aks get-credentials --resource-group skuser17-rsrcgrp --name skuser17-aks
 ```
 
 - aks에 acr 붙이기
 ```
-az aks update -n skccteam03-aks -g skccteam03-rsrcgrp --attach-acr skccteam03
+az aks update -n skuser17-aks -g skuser17-rsrcgrp --attach-acr skuser17
 ```
 
 ![aks붙이기](https://user-images.githubusercontent.com/78134019/109653395-540e2c00-7ba4-11eb-97dd-2dcfdf5dc539.jpg)
@@ -516,28 +516,27 @@ az aks update -n skccteam03-aks -g skccteam03-rsrcgrp --attach-acr skccteam03
 - 네임스페이스 만들기
 
 ```
-kubectl create ns team03
+kubectl create ns skuser17ns
 kubectl get ns
 ```
 ![image](https://user-images.githubusercontent.com/78134019/109776836-5cb73e80-7c46-11eb-9562-d462525d6dab.png)
 
 * 도커 이미지 만들고 레지스트리에 등록하기
 ```
-cd taxicall_eng
-az acr build --registry skccteam03 --image skccteam03.azurecr.io/taxicalleng:v1 .
-az acr build --registry skccteam03 --image skccteam03.azurecr.io/taxicalleng:v2 .
+cd gateway
+az acr build --registry skuser17 --image skuser17.azurecr.io/gateway:v1 .
 cd ..
-cd taximanage_eng
-az acr build --registry skccteam03 --image skccteam03.azurecr.io/taximanageeng:v1 .
+cd storagecall
+az acr build --registry skuser17 --image skuser17.azurecr.io/storagecall:v1 .
 cd ..
-cd taxiassign_eng
-az acr build --registry skccteam03 --image skccteam03.azurecr.io/taxiassigneng:v1 .
+cd storagemanage
+az acr build --registry skuser17 --image skuser17.azurecr.io/storagemanage:v1 .
 cd ..
-cd gateway_eng
-az acr build --registry skccteam03 --image skccteam03.azurecr.io/gatewayeng:v1 .
+cd storageassign
+az acr build --registry skuser17 --image skuser17.azurecr.io/storageassign:v1 .
 cd ..
 cd customer_py
-az acr build --registry skccteam03 --image skccteam03.azurecr.io/customer-policy-handler:v1 .
+az acr build --registry skuser17 --image skuser17.azurecr.io/customer-policy-handler:v1 .
 ```
 
 ![docker_gateway](https://user-images.githubusercontent.com/78134019/109777813-76a55100-7c47-11eb-8d8d-59eaabefab54.png)
@@ -558,29 +557,25 @@ az acr build --registry skccteam03 --image skccteam03.azurecr.io/customer-policy
 
 - deployment.yml로 서비스 배포
 ```
-cd ../../
-cd customer_py/kubernetes
-kubectl apply -f deployment.yml --namespace=team03
-kubectl apply -f service.yaml --namespace=team03
-cd ../../
-cd taxicall_eng/kubernetes
-kubectl apply -f deployment.yml --namespace=team03
-kubectl apply -f service.yaml --namespace=team03
+cd gateway/kubernetes
+kubectl apply -f deployment.yml --namespace=skuser17ns
+kubectl apply -f service.yaml --namespace=skuser17ns
 
 cd ../../
-cd taximanage_eng/kubernetes
-kubectl apply -f deployment.yml --namespace=team03
-kubectl apply -f service.yaml --namespace=team03
+cd storagecall/kubernetes
+kubectl apply -f deployment.yml --namespace=skuser17ns
+kubectl apply -f service.yaml --namespace=skuser17ns
 
 cd ../../
-cd taxiassign_eng/kubernetes
-kubectl apply -f deployment.yml --namespace=team03
-kubectl apply -f service.yaml --namespace=team03
+cd storagemanage/kubernetes
+kubectl apply -f deployment.yml --namespace=skuser17ns
+kubectl apply -f service.yaml --namespace=skuser17ns
 
 cd ../../
-cd gateway_eng/kubernetes
-kubectl apply -f deployment.yml --namespace=team03
-kubectl apply -f service.yaml --namespace=team03
+cd storageassign/kubernetes
+kubectl apply -f deployment.yml --namespace=skuser17ns
+kubectl apply -f service.yaml --namespace=skuser17ns
+
 ```
 <Deploy cutomer>
 	
@@ -605,7 +600,7 @@ kubectl apply -f service.yaml --namespace=team03
 
 - 서비스확인
 ```
-kubectl get all -n team03
+kubectl get all
 ```
 ![image](https://user-images.githubusercontent.com/78134019/109777026-9be58f80-7c46-11eb-9eac-a55ebcf91989.png)
 
