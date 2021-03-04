@@ -459,6 +459,8 @@ Kubectl 결과 확인
 시나리오는 단말앱(app)-->결제(pay) 시의 연결을 RESTful Request/Response 로 연동하여 구현이 되어있고, 결제 요청이 과도할 경우 CB 를 통하여 장애격리.
 
 Hystrix 를 설정: 요청처리 쓰레드에서 처리시간이 610 밀리가 넘어서기 시작하여 어느정도 유지되면 CB 회로가 닫히도록 (요청을 빠르게 실패처리, 차단) 설정
+
+'''
 # application.yml
 feign:
   hystrix:
@@ -469,17 +471,18 @@ hystrix:
     # 전역설정
     default:
       execution.isolation.thread.timeoutInMilliseconds: 610
+'''
 
 ![캡처1](https://user-images.githubusercontent.com/78134087/110044222-1d930580-7d8c-11eb-8161-272390761097.JPG)
 
 
 kubectl exec -it pod/siege-5c7c46b788-4rn4r -c siege -n phone82 -- /bin/bash
-siege 종료:
- Ctrl + C -> exit
+
+
+siege 종료: Ctrl + C -> exit
  
 부하테스터 siege 툴을 통한 서킷 브레이커 동작 확인:
-동시사용자 100명
-60초 동안 실시
+동시사용자 100명 60초 동안 실시
 
 
 siege -c100 -t60S -r10 -v --content-type "application/json" 'storagecall:8080/storagecalls/ POST {"tel": "01023456789", "cost":30000}'
