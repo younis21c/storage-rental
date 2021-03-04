@@ -92,7 +92,7 @@
 
 ### 폴리시의 이동
 
-![08](https://user-images.githubusercontent.com/78134087/110018524-b749bb00-7d6a-11eb-8afa-db611582f5c8.JPG)
+![08](https://user-images.githubusercontent.com/78134087/110019298-a3eb1f80-7d6b-11eb-8497-6bf1ca982efc.JPG)
 
 
 
