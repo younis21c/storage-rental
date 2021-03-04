@@ -146,7 +146,8 @@
 
 ## 헥사고날 아키텍처 다이어그램 도출 (Polyglot)
 
-![13헥사](https://user-images.githubusercontent.com/78134087/109809479-aebe8b00-7c6b-11eb-8571-68e3efb83989.JPG)
+![hsqldb](https://user-images.githubusercontent.com/78134087/109930212-bb45f080-7d0a-11eb-8420-e8a8db855068.JPG)
+
 
 
 
