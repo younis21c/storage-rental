@@ -389,7 +389,7 @@ public class StoragecallPolicyHandler {
 <창고 신청 Storage call>
 
 
-창고 할당(storage assign) 서비스를 중단 후 창고신청
+창고할당(storage assign) 서비스 중단 후 창고신청 실행해도 이상 없이 동작
 
 ![pubsub1](https://user-images.githubusercontent.com/78134087/110007201-ca09c300-7d5d-11eb-9e12-1ac9cfab8b85.JPG)
 
