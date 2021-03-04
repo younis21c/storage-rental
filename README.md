@@ -188,6 +188,7 @@ Entity Pattern 과 Repository Pattern 을 적용하기 위해 Spring Data REST �
 
 ![ddd적용](https://user-images.githubusercontent.com/78134087/109931222-eaa92d00-7d0b-11eb-977c-234cc0030dab.JPG)
 
+![ddd2](https://user-images.githubusercontent.com/78134087/110033551-e537fb00-7d7c-11eb-9902-adec71234e8c.JPG)
 
 
 
