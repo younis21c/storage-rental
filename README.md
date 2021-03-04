@@ -401,104 +401,11 @@ Kubectl 결과 확인
 
 
 
-
 ## 동기식 호출 / 서킷 브레이킹 / 장애격리
-
-* 서킷 브레이킹 프레임워크의 선택: Spring FeignClient + Hystrix 옵션을 사용하여 구현하였습니다.
-
-- Hystrix 를 설정:  
-
-요청처리 쓰레드에서 처리시간이 610 밀리가 넘어서기 시작하여 어느정도 유지되면 CB 회로가 닫히도록 (요청을 빠르게 실패처리, 차단) 설정
-```
-# application.yml
-feign:
-  hystrix:
-    enabled: true
-
-# To set thread isolation to SEMAPHORE
-#hystrix:
-#  command:
-#    default:
-#      execution:
-#        isolation:
-#          strategy: SEMAPHORE
-
-hystrix:
-  command:
-    # 전역설정
-    default:
-      execution.isolation.thread.timeoutInMilliseconds: 610
-
-```
-![hystrix](https://user-images.githubusercontent.com/78134019/109652345-0218d680-7ba3-11eb-847b-708ba071c119.jpg)
-
-
-부하테스트
-
-
-* Siege 리소스 생성
-
-```
-kubectl run siege --image=apexacme/siege-nginx -n team03
-```
-
-* 실행
-
-```
-kubectl exec -it pod/siege-5459b87f86-hlfm9 -c siege -n team03 -- /bin/bash
-```
-
-*부하 실행
-
-```
-siege -c200 -t60S -r10 -v --content-type "application/json" 'http://20.194.36.201:8080/taxicalls POST {"tel": "0101231234"}'
-```
-
-- 부하 발생하여 CB가 발동하여 요청 실패처리하였고, 밀린 부하가 택시호출(taxicall) 서비스에서 처리되면서 
-다시 taxicall에서 서비스를 받기 시작 합니다
-
-![secs1](https://user-images.githubusercontent.com/78134019/109786899-01d71480-7c51-11eb-9e6c-0a819e85b020.png)
-
-
-- report
-
-![secs2](https://user-images.githubusercontent.com/78134019/109786922-07345f00-7c51-11eb-900a-315f7d0d6484.png)
-
-
 
 
 
 ### 오토스케일 아웃
-
-
-
-```
-# autocale out 설정
- deployment.yml 설정
-```
-
-
-![auto1](https://user-images.githubusercontent.com/78134019/109794479-3ea70980-7c59-11eb-8d32-fbc039106c8c.jpg)
-
-
-```
-kubectl autoscale deploy taxicall --min=1 --max=10 --cpu-percent=15 -n team03
-```
-
-
-```
-root@labs--279084598:/home/project# kubectl exec -it pod/siege-5459b87f86-hlfm9 -c siege -n team03 -- /bin/bash
-root@siege-5459b87f86-hlfm9:/# siege -c100 -t120S -r10 -v --content-type "application/json" 'http://20.194.36.201:8080/taxicalls POST {"tel": "0101231234"}'
-```
-![auto4](https://user-images.githubusercontent.com/78134019/109794919-b70dca80-7c59-11eb-9710-8ff6b4dd5f54.jpg)
-
-
-
-- 오토스케일링에 대한 모니터링:
-```
-kubectl get deploy taxicall -w -n team03
-```
-![auto_final](https://user-images.githubusercontent.com/78134019/109796515-98a8ce80-7c5b-11eb-9512-a0a927217a38.jpg)
 
 
 
@@ -528,66 +435,7 @@ siege -c100 -t120S -r10 -v --content-type "application/json" 'http://20.194.36.2
 
 ## Config Map
 
-- apllication.yml 설정
 
-* default 프로파일
-
-![configmap1](https://user-images.githubusercontent.com/31096538/109798636-5df46580-7c5e-11eb-982d-16482f98b13f.JPG)
-
-* docker 프로파일
-
-![configmap2](https://user-images.githubusercontent.com/31096538/109798699-6e0c4500-7c5e-11eb-9d0d-47b90d637ae9.JPG)
-
-- Deployment.yml 설정
-
-![configmap3](https://user-images.githubusercontent.com/31096538/109798713-72d0f900-7c5e-11eb-8458-8fb9d6225c49.JPG)
-
-- config map 생성 후 조회
-```
-kubectl create configmap apiurl --from-literal=url=http://taxicall:8080 --from-literal=fluentd-server-ip=10.xxx.xxx.xxx -n team03
-```
-![configmap4](https://user-images.githubusercontent.com/31096538/109798727-76fd1680-7c5e-11eb-9818-327870ea2e4d.JPG)
-
-- 설정한 url로 주문 호출
-```
-http 20.194.36.201:8080/taxicalls tel="01012345678" status="call" location="mapo" cost=25000
-```
-
-![configmap5](https://user-images.githubusercontent.com/31096538/109798744-7c5a6100-7c5e-11eb-8aaa-03fa8277cee6.JPG)
-
-- configmap 삭제 후 app 서비스 재시작
-```
-kubectl delete configmap apiurl -n team03
-kubectl get pod/taxicall-74f7dbc967-mtbmq -n team03 -o yaml | kubectl replace --force -f-
-```
-![configmap6](https://user-images.githubusercontent.com/31096538/109798766-811f1500-7c5e-11eb-8008-1b9073cb6722.JPG)
-
-- configmap 삭제된 상태에서 주문 호출   
-```
-http 20.194.36.201:8080/taxicalls tel="01012345678" status="call" location="mapo" cost=25000
-kubectl get all -n team03
-```
-![configmap7](https://user-images.githubusercontent.com/31096538/109798785-85e3c900-7c5e-11eb-8769-ab416b1e17b2.JPG)
-
-
-![configmap8](https://user-images.githubusercontent.com/31096538/109798805-8bd9aa00-7c5e-11eb-8d05-1db2457d3611.JPG)
-
-
-![configmap9](https://user-images.githubusercontent.com/31096538/109798824-9005c780-7c5e-11eb-9d5b-6f14f9b6bba9.JPG)
-
-
-## Self-healing (Liveness Probe)
-
-
-- deployment.yml 에 Liveness Probe 옵션 추가
-```
-livenessProbe:
-	tcpSocket:
-	  port: 8081
-	initialDelaySeconds: 5
-	periodSeconds: 5
-```
-![selfhealing](https://user-images.githubusercontent.com/78134019/109805068-589b1900-7c66-11eb-9565-d44adde4ffc5.jpg)
 
 
 
