@@ -264,7 +264,7 @@ public interface StoragemanageService {
 
 ```
 
-StoragemanageService 인터페이스를 구현한 StoragemanageServiceFallback 클래스.
+StoragemanageService 인터페이스를 구현한 StoragemanageServiceFallback
 
 ```
 # external > StoragemanageServiceFallback.java
@@ -284,7 +284,6 @@ public class StoragemanageServiceFallback implements StoragemanageService {
 	}
 
 }
-
 
 ```
 창고신청을 하면 창고관리에 창고 할당 요청을 동기적으로 진행
@@ -356,7 +355,7 @@ public class Storagecall {
 
 ```
 
-storagecall 내 Policy Handler 에서 아래와 같이 Sub 구현
+Storagecall 내 Policy Handler 에서 Sub 구현
 
 ```
 package storagecall;
@@ -388,6 +387,8 @@ public class StoragecallPolicyHandler {
 
 
 <창고 신청 Storage call>
+
+
 창고 할당(storage assign) 서비스를 중단 후 창고신청
 
 ![pubsub1](https://user-images.githubusercontent.com/78134087/110007201-ca09c300-7d5d-11eb-9e12-1ac9cfab8b85.JPG)
