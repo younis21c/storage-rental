@@ -183,19 +183,16 @@ msaez.io 를 통해 구현한 Aggregate 단위의 Entity 선언 후, 구현을 �
 
 Entity Pattern 과 Repository Pattern 을 적용하기 위해 Spring Data REST 의 RestRepository 를 적용하였다.
 
-
-
---- 추후 변경 필요
-![DDD](https://user-images.githubusercontent.com/78134019/109460756-74ef5800-7aa4-11eb-8140-ec3ebb47a63f.jpg)
-
-
-![DDD_2](https://user-images.githubusercontent.com/78134019/109460847-9ea87f00-7aa4-11eb-8fe4-94dd57009cd4.jpg)
+![ddd적용](https://user-images.githubusercontent.com/78134087/109929765-2fcc5f80-7d0a-11eb-88b5-2e6591d7fcfb.JPG)
 
 
 
 ## 폴리글랏 퍼시스턴스
 
---- 추후 변경 필요
+위치 : /storagerental>storagemanage>pom.xml
+
+![hsqldb](https://user-images.githubusercontent.com/78134087/109928785-27bff000-7d09-11eb-9fdd-01da78503b3f.JPG)
+
 
 ## Gateway 적용
 
