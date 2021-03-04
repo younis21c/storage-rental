@@ -473,11 +473,7 @@ hystrix:
       execution.isolation.thread.timeoutInMilliseconds: 610
 ```
 
-![캡처1](https://user-images.githubusercontent.com/78134087/110044222-1d930580-7d8c-11eb-8161-272390761097.JPG)
-
-
-kubectl exec -it pod/siege-5c7c46b788-4rn4r -c siege -n phone82 -- /bin/bash
-
+kubectl exec -it pod/siege-5459b87f86-wkpft -c siege -- /bin/bash
 
 siege 종료: Ctrl + C -> exit
  
