@@ -225,10 +225,11 @@ gateway > applitcation.yml 설정
 
 gateway 테스트
 ```
-http localhost:8080/storagecalls
+http localhost:8088/storagecalls
 -> gateway 를 호출하나 8081 로 호출됨
 
-----테스트 실패!!  HELP!!!
+![gw-test](https://user-images.githubusercontent.com/78134087/109934438-e4b54b00-7d0f-11eb-866b-f771a70299ca.JPG)
+
 
 ## 동기식 호출과 Fallback 처리
 
