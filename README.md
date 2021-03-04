@@ -199,9 +199,80 @@ Entity Pattern 과 Repository Pattern 을 적용하기 위해 Spring Data REST �
 
 gateway > applitcation.yml 설정
 
-![gateway_1](https://user-images.githubusercontent.com/78134019/109480363-c73d7280-7abe-11eb-9904-0c18e79072eb.png)
+server:
+  port: 8088
 
-![gateway_2](https://user-images.githubusercontent.com/78134019/109480386-d02e4400-7abe-11eb-9251-a813ac911e0d.png)
+---
+
+spring:
+  profiles: default
+  cloud:
+    gateway:
+      routes:
+        - id: storagecall
+          uri: http://localhost:8081
+          predicates:
+            - Path=/storagecalls/**
+        - id: storagemanage
+          uri: http://localhost:8082
+          predicates:
+            - Path=/storagemanages/**
+        - id: customer
+          uri: http://localhost:8083
+          predicates:
+            - Path= /customers/**
+        - id: storageassign
+          uri: http://localhost:8084
+          predicates:
+            - Path=/storageassigns/**
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins:
+              - "*"
+            allowedMethods:
+              - "*"
+            allowedHeaders:
+              - "*"
+            allowCredentials: true
+
+
+---
+
+spring:
+  profiles: docker
+  cloud:
+    gateway:
+      routes:
+        - id: storagecall
+          uri: http://storagecall:8080
+          predicates:
+            - Path=/storagecalls/**
+        - id: storagemanage
+          uri: http://storagemanage:8080
+          predicates:
+            - Path=/storagemanages/**
+        - id: customer
+          uri: http://customer:8080
+          predicates:
+            - Path= /customers/**
+        - id: storageassign
+          uri: http://storageassign:8080
+          predicates:
+            - Path=/storageassigns/**
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins:
+              - "*"
+            allowedMethods:
+              - "*"
+            allowedHeaders:
+              - "*"
+            allowCredentials: true
+
+server:
+  port: 8080
 
 
 gateway 테스트
