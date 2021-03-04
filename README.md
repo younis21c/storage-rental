@@ -506,8 +506,8 @@ kubectl get deploy taxicall -w -n team03
 
 - deployment.yml에 readiness 옵션을 추가 
 
+![무정지배포1](https://user-images.githubusercontent.com/78134087/110012102-8023db80-7d63-11eb-9d15-c366ec82d181.JPG)
 
-![무정지 배포1](https://user-images.githubusercontent.com/78134019/109809110-45d71300-7c6b-11eb-955c-9b8a3b3db698.png)
 
 
 - seige 실행
