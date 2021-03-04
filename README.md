@@ -400,7 +400,7 @@ public class StoragecallPolicyHandler {
 1. git에서 소스 가져오기
 
 
-git clone http://github.com/younis21c/storage-rental
+  git clone http://github.com/younis21c/storage-rental
 
 ```
 리소스그룹 	skuser17-rsrcgrp
@@ -493,7 +493,7 @@ Kubectl 결과 확인
 
 - seige 실행
 ```
-siege -c100 -t120S -r10 -v --content-type "application/json" 'http://storage:8080/storagecalls POST {"tel": "0101231234"}'
+siege -c100 -t120S -r10 -v --content-type "application/json" 'http://storagecall:8080/storagecalls POST {"tel": "01012341234"}'
 ```
 
 
