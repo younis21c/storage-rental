@@ -183,6 +183,9 @@ msaez.io 를 통해 구현한 Aggregate 단위의 Entity 선언 후, 구현을 �
 
 Entity Pattern 과 Repository Pattern 을 적용하기 위해 Spring Data REST 의 RestRepository 를 적용하였다.
 
+
+
+--- 추후 변경 필요
 ![DDD](https://user-images.githubusercontent.com/78134019/109460756-74ef5800-7aa4-11eb-8140-ec3ebb47a63f.jpg)
 
 
@@ -192,102 +195,32 @@ Entity Pattern 과 Repository Pattern 을 적용하기 위해 Spring Data REST �
 
 ## 폴리글랏 퍼시스턴스
 
-
---- 추후 등록 예정
+--- 추후 변경 필요
 
 ## Gateway 적용
 
 gateway > applitcation.yml 설정
 
-server:
-  port: 8088
+![gw1](https://user-images.githubusercontent.com/78134087/109901108-cd5c6a80-7cdb-11eb-8586-e43470e33182.JPG)
+![gw2](https://user-images.githubusercontent.com/78134087/109901114-cfbec480-7cdb-11eb-8bc9-6cf9dce22fad.JPG)
 
----
-
-spring:
-  profiles: default
-  cloud:
-    gateway:
-      routes:
-        - id: storagecall
-          uri: http://localhost:8081
-          predicates:
-            - Path=/storagecalls/**
-        - id: storagemanage
-          uri: http://localhost:8082
-          predicates:
-            - Path=/storagemanages/**
-        - id: customer
-          uri: http://localhost:8083
-          predicates:
-            - Path= /customers/**
-        - id: storageassign
-          uri: http://localhost:8084
-          predicates:
-            - Path=/storageassigns/**
-      globalcors:
-        corsConfigurations:
-          '[/**]':
-            allowedOrigins:
-              - "*"
-            allowedMethods:
-              - "*"
-            allowedHeaders:
-              - "*"
-            allowCredentials: true
-
-
----
-
-spring:
-  profiles: docker
-  cloud:
-    gateway:
-      routes:
-        - id: storagecall
-          uri: http://storagecall:8080
-          predicates:
-            - Path=/storagecalls/**
-        - id: storagemanage
-          uri: http://storagemanage:8080
-          predicates:
-            - Path=/storagemanages/**
-        - id: customer
-          uri: http://customer:8080
-          predicates:
-            - Path= /customers/**
-        - id: storageassign
-          uri: http://storageassign:8080
-          predicates:
-            - Path=/storageassigns/**
-      globalcors:
-        corsConfigurations:
-          '[/**]':
-            allowedOrigins:
-              - "*"
-            allowedMethods:
-              - "*"
-            allowedHeaders:
-              - "*"
-            allowCredentials: true
-
-server:
-  port: 8080
 
 
 gateway 테스트
 
 ```
-http localhost:8080/택시호출s
+http localhost:8080/storagecalls
 -> gateway 를 호출하나 8081 로 호출됨
-```
+
+
+--- 추후 변경 필요
 ![gateway_3](https://user-images.githubusercontent.com/78134019/109480424-da504280-7abe-11eb-988e-2a6d7a1f7cea.png)
 
 
 
-## 동기식 호출 과 Fallback 처리
+## 동기식 호출과 Fallback 처리
 
-호출(taxicall)->택시관리(taximanage) 간의 호출은 동기식 일관성을 유지하는 트랜잭션으로 처리함.
+창고신청(storagecall)->창고관리(storagemanage) 간의 호출은 동기식 일관성을 유지하는 트랜잭션으로 처리.
 호출 프로토콜은 이미 앞서 Rest Repository 에 의해 노출되어있는 REST 서비스를 FeignClient 를 이용하여 호출하도록 한다. 
 
 
