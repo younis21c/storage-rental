@@ -98,35 +98,36 @@
 
 ### 완성된 모형
 
-![10완성](https://user-images.githubusercontent.com/78134087/109809125-4a9bc700-7c6b-11eb-8eee-829356e6d0fc.JPG)
+![10완성](https://user-images.githubusercontent.com/78134087/109900159-3fcc4b00-7cda-11eb-8dfb-73dae0c302c9.JPG)
+
 
 
 ### 기능적 요구사항 검증
+![11기능](https://user-images.githubusercontent.com/78134087/109900164-422ea500-7cda-11eb-8152-0eb228741831.JPG)
 
-![11기능](https://user-images.githubusercontent.com/78134087/109809149-512a3e80-7c6b-11eb-8302-d6b303a4b9ff.JPG)
 
-#### 신청case
+#### 신청case (red)
 1. 고객이 창고를 신청요청한다.(ok)
 2. 창고관리 시스템이 창고 할당을 요청한다.(ok)
 3. 창고 자동 할당이 완료된다.(ok)
 4. 신청상태 및 할당상태를 갱신한다.(ok)
 5. 고객에게 알림을 한다.(ok)
 
-#### 취소case
+#### 취소case (blue)
 1. 고객이 신청한 창고대여를 취소요청한다.(ok)
 2. 창고관리 시스템이 창고 할당 취소를 요청한다.(ok)
 3. 창고 할당이 취소된다.(ok)
 4. 취소상태로 갱신한다.(ok)
 5. 고객에게 알림을 한다.(ok)
 
-#### 확인case
+#### 확인case (black)
 1. 고객이 신청 진행내역을 볼 수 있어야 한다. (ok) 
 
 
 
 ### 비기능 요구사항 검증
+![12비기능](https://user-images.githubusercontent.com/78134087/109900192-4ce93a00-7cda-11eb-9bca-9fc019aed69c.JPG)
 
-![12비기능](https://user-images.githubusercontent.com/78134087/109809405-9a7a8e00-7c6b-11eb-9311-1fdef829501f.JPG)
 
 마이크로 서비스를 넘나드는 시나리오에 대한 트랜잭션 처리
  
@@ -136,8 +137,9 @@
 2) 신청요청 완료시 할당확인 및 결과 전송: storagemanage service 에서
   storageassign 마이크로서비스로 창고할당 요청이 전달되는 과정에 있어서 
   해당 마이크로 서비스가 별도의 배포주기를 가지기 때문에 Eventual Consistency 방식으로 트랜잭션 처리함. 
-3) 나머지 모든 inter-microservice 트랜잭션: 신청상태, 할당/할당취소 여부 등 이벤트에 대해 카톡을 처리하는 등, 
-  데이터 일관성의 시점이 크리티컬하지 않은 모든 경우가 대부분이라 판단, Eventual Consistency 를 기본으로 채택함. 
+3) 나머지 모든 inter-microservice 트랜잭션
+  신청상태 등 이벤트에 대해 데이터 일관성 시점이 critical 하지 않은 경우가 대부분이라
+  Eventual Consistency 를 기본으로 채택함. 
 
 
 
