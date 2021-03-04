@@ -247,18 +247,19 @@ http localhost:8088/storagecalls
 # external > StoragemanageService.java
 
 
-package storagerental.external;
+package storagecall.external;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-@FeignClient(name="storagemanage", url="http://storagemanage:8080", fallback = StoragemanageServiceFallback.class)
+//@FeignClient(name="taximanage", url="http://localhost:8082", fallback = StoragemanageServiceFallback.class)
+@FeignClient(name="taximanage", url="http://localhost:8082")
 public interface StoragemanageService {
 
     @RequestMapping(method= RequestMethod.POST, path="/storagemanages")
-    public void requestStorageAssign(@RequestBody Storagemanage storageMange);
+    public void storageManageCall( @RequestBody Storagemanage cleanmanage);
 
 }
 
@@ -270,94 +271,40 @@ StoragemanageService 인터페이스를 구현한 StoragemanageServiceFallback �
 # external > StoragemanageServiceFallback.java
 
 
-package storagerental.external;
+package storagecall.external;
 
 import org.springframework.stereotype.Component;
 
 @Component
 public class StoragemanageServiceFallback implements StoragemanageService {
 	 
-	
 	@Override
-	public void StoragemanageAssigned(Storagemanage storageMange) {
+	public void storageManageCall( Storagemanage cleanmanage) {
 		// TODO Auto-generated method stub
-		System.out.println("Circuit breaker has been opened. Fallback returned instead. " + Storagemanage.getId());
+		System.out.println("Circuit breaker has been opened. Fallback returned instead. " + cleanmanage.getId());
 	}
 
 }
 
-```
-
-![동기식](https://user-images.githubusercontent.com/78134019/109463569-97837000-7aa8-11eb-83c4-6f6eff1594aa.jpg)
-
-
-![2021-03-04_004922](https://user-images.githubusercontent.com/7607807/109832226-80e54080-7c83-11eb-9526-e1820a60c938.png)
-
-
-창고 할당요청(영문)
-
-창고신청을 하면 창고관리에 창고 할당 요청을 동기적으로 진행 합니다.
-```
-# 택시호출.java
-
-@PostPersist
-public void onPostPersist(){
-	System.out.println("휴대폰번호 " + getTel());
-	System.out.println("호출위치 " + getLocation());
-	System.out.println("호출상태 " + getStatus());
-	System.out.println("예상요금 " + getCost());
-	//Following code causes dependency to external APIs
-	// it is NOT A GOOD PRACTICE. instead, Event-Policy mapping is recommended.   	
-	if(getTel() != null)
-	{
-		System.out.println("SEND###############################" + getId());
-		Taximanage txMgr = new Taximanage();
-		txMgr.setId(getId());
-		txMgr.setOrderId(String.valueOf(getId()));
-		txMgr.setTel(getTel());
-		if(getLocation()!=null) 
-			txMgr.setLocation(getLocation());
-		if(getStatus()!=null) 
-			txMgr.setStatus(getStatus());
-		if(getCost()!=null) 
-			txMgr.setCost(getCost());
-		
-		// mappings goes here
-		TaxicallApplication.applicationContext.getBean(TaximanageService.class)
-			.requestTaxiAssign(txMgr);;
-	}
-
-}
-```
-
-![동기식2](https://user-images.githubusercontent.com/78134019/109463985-47f17400-7aa9-11eb-8603-c1f83e17951d.jpg)
-
-
-![2021-03-04_005205](https://user-images.githubusercontent.com/7607807/109832649-e6393180-7c83-11eb-822f-bd41957e7a65.png)
-
-- 동기식 호출 적용으로 창고 관리 시스템이 정상적이지 않으면, 창고대여 신청할 수 없음을 다음과 같이 확인 할 수 있습니다.
 
 ```
-- 창고 관리 시스템 down 후 storagecall 호출 
-#taxicall
+창고신청을 하면 창고관리에 창고 할당 요청을 동기적으로 진행
 
-C:\Users\Administrator>http localhost:8081/택시호출s 휴대폰번호="01012345678" 호출상태="호출"
-```
+동기식 호출 적용으로 창고 관리 시스템이 정상적이지 않으면, 창고대여 신청할 수 없음
 
-![택시관리죽으면택시콜놉](https://user-images.githubusercontent.com/78134019/109464780-905d6180-7aaa-11eb-9c90-e7d1326deea1.jpg)
+![reqres](https://user-images.githubusercontent.com/78134087/110003958-426e8500-7d5a-11eb-9071-06c3c72868aa.JPG)
 
 
 ```
-# 창고관리 (storagemanage) 재기동 후 호출
+창고관리 (storagemanage) 재기동 후 호출
 
-http localhost:8081/택시호출s 휴대폰번호="01012345678" 호출상태="호출"
+http localhost:8082/storagemanages 
+
+http localhost:8081/storagecalls tel="01011115678" location="파주" status="호출" cost=50000
+
 ```
+![reqres2](https://user-images.githubusercontent.com/78134087/110005260-a2b1f680-7d5b-11eb-8daa-b35831931f09.JPG)
 
-![택시관리재시작](https://user-images.githubusercontent.com/78134019/109464984-e5997300-7aaa-11eb-9363-b7bfe15de105.jpg)
-
--fallback 
-
-![fallback캡쳐](https://user-images.githubusercontent.com/78134019/109480299-b5f46600-7abe-11eb-906e-9e1e6da245b2.png)
 
 
 ## 비동기식 호출 / 장애격리  / 성능
