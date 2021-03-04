@@ -74,12 +74,13 @@
 ![05어그리](https://user-images.githubusercontent.com/78134087/110018446-a1d49100-7d6a-11eb-8b3f-4bceeee475e5.JPG)
 
 
-창고신청, 창고관리, 창고할당 어그리게잇을 생성하고 그와 연결된 command 와 event 들에 의하여 트랜잭션이 유지되어야 하는 단위로 그들 끼리 묶어줌 ![06바운디드](https://user-images.githubusercontent.com/78134087/110018479-ac8f2600-7d6a-11eb-9a4b-c2e7a629746f.JPG)
+창고신청, 창고관리, 창고할당 어그리게잇을 생성하고 그와 연결된 command 와 event 들에 의하여 트랜잭션이 유지되어야 하는 단위로 묶어줌 
 
 
 
 ### 바운디드 컨텍스트로 묶기
-![Uploading 06바운디드.JPG…]()
+
+![06바운디드](https://user-images.githubusercontent.com/78134087/110019083-5f5f8400-7d6b-11eb-8081-bcdd87f54f5d.JPG)
 
 
 
