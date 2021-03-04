@@ -414,78 +414,51 @@ cd ..
 
 
 # 클라우드 배포/운영 파이프라인
-
-- 애저 클라우드에 배포하기 위해서 다음과 같이 주요 정보를 설정 하였습니다.
+1. git에서 소스 가져오기
+git clone http://github.com/younis21c/storage-rental
 
 ```
 리소스 그룹명 : skccteam03-rsrcgrp
 클러스터 명 : skccteam03-aks
 레지스트리 명 : skccteam03
 ```
-
-- az login
-우선 애저에 로그인 합니다.
-```
-{
-    "cloudName": "AzureCloud",
-    "homeTenantId": "6011e3f8-2818-42ea-9a63-66e6acc13e33",
-    "id": "718b6bd0-fb75-4ec9-9f6e-08ae501f92ca",
-    "isDefault": true,
-    "managedByTenants": [],
-    "name": "2",
-    "state": "Enabled",
-    "tenantId": "6011e3f8-2818-42ea-9a63-66e6acc13e33",
-    "user": {
-      "name": "skTeam03@gkn2021hotmail.onmicrosoft.com",
-      "type": "user"
-    }
-  }
-```
-
-- 토큰 가져오기
-```
-az aks get-credentials --resource-group skccteam03-rsrcgrp --name skccteam03-aks
-```
-
-- aks에 acr 붙이기
-```
-az aks update -n skccteam03-aks -g skccteam03-rsrcgrp --attach-acr skccteam03
-```
-
-![aks붙이기](https://user-images.githubusercontent.com/78134019/109653395-540e2c00-7ba4-11eb-97dd-2dcfdf5dc539.jpg)
-
-- 네임스페이스 만들기
-
-```
-kubectl create ns team03
-kubectl get ns
-```
-![image](https://user-images.githubusercontent.com/78134019/109776836-5cb73e80-7c46-11eb-9562-d462525d6dab.png)
-
-* 도커 이미지 만들고 레지스트리에 등록하기
-```
-cd taxicall_eng
-az acr build --registry skccteam03 --image skccteam03.azurecr.io/taxicalleng:v1 .
-az acr build --registry skccteam03 --image skccteam03.azurecr.io/taxicalleng:v2 .
+2. Build
+...
+cd gateway
+mvn clean && mvn package
 cd ..
-cd taximanage_eng
-az acr build --registry skccteam03 --image skccteam03.azurecr.io/taximanageeng:v1 .
+cd storagecall
+mvn clean && mvn package
 cd ..
-cd taxiassign_eng
-az acr build --registry skccteam03 --image skccteam03.azurecr.io/taxiassigneng:v1 .
+cd storagemanage
+mvn clean && mvn package
 cd ..
-cd gateway_eng
-az acr build --registry skccteam03 --image skccteam03.azurecr.io/gatewayeng:v1 .
+cd storageassign
+mvn clean && mvn package
+...
+
+3. Dockerlizing, ACR(Azure Container Registry에 Docker Image Push
+...
+cd gateway
+az acr build --registry skuser17 --image skuser17.azurecr.io/gateway:v1 .
+ 
 cd ..
-cd customer_py
-az acr build --registry skccteam03 --image skccteam03.azurecr.io/customer-policy-handler:v1 .
-```
-![ACR](https://user-images.githubusercontent.com/78134087/109985823-85276180-7d48-11eb-9859-f369c0a2c1af.JPG)
+cd storagecall
+az acr build --registry skuser17 --image skuser17.azurecr.io/storagecall:v1 .
+cd ..
+cd storagemanage
+az acr build --registry skuser17 --image skuser17.azurecr.io/storagemanage:v1 .
+cd ..
+cd storageassign
+az acr build --registry skuser17 --image skuser17.azurecr.io/storageassign:v1 .
+...
+
+ACR에 정상적으로 push되었음을 확인
+![ACR](https://user-images.githubusercontent.com/78134087/109987442-f87da300-7d49-11eb-8345-5bba6f3fcca2.JPG)
 
 
--각 마이크로 서비스를 yml 파일을 사용하여 배포 합니다.
-deployment.yml로 서비스 배포
-```
+4. Kubernetes에서 Deploy
+...
 cd gateway/kubernetes
 kubectl apply -f deployment.yml --namespace=skuser17ns
 kubectl apply -f service.yaml --namespace=skuser17ns
@@ -504,13 +477,11 @@ cd ../../
 cd storageassign/kubernetes
 kubectl apply -f deployment.yml --namespace=skuser17ns
 kubectl apply -f service.yaml --namespace=skuser17ns
-```
+...
 
-- 서비스확인
-```
-kubectl get all
-```
-![배포확인](https://user-images.githubusercontent.com/78134087/109986206-e0f1ea80-7d48-11eb-91c1-77f215307fcb.JPG)
+서비스 배포 확인
+![배포확인](https://user-images.githubusercontent.com/78134087/109987592-1ba85280-7d4a-11eb-8e39-ed2af488f677.JPG)
+
 
 
 
