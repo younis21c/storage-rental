@@ -425,6 +425,8 @@ az acr build --registry skuser17 --image skuser17.azurecr.io/storageassign:v1 .
 ```
 
 ACR에 정상적으로 push되었음을 확인
+
+
 ![ACR](https://user-images.githubusercontent.com/78134087/109987442-f87da300-7d49-11eb-8345-5bba6f3fcca2.JPG)
 
 
@@ -451,6 +453,8 @@ kubectl apply -f service.yaml --namespace=skuser17ns
 ```
 
 서비스 배포 확인
+
+
 ![배포확인](https://user-images.githubusercontent.com/78134087/109987592-1ba85280-7d4a-11eb-8e39-ed2af488f677.JPG)
 
 
