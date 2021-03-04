@@ -155,18 +155,27 @@
 # 구현:
 
 cd storagecall
+
 mvn spring-boot:run  
+
 
 cd storagemanage
+
 mvn spring-boot:run
 
+
 cd storageassign
+
 mvn spring-boot:run 
 
-cd customer
-mvn spring-boot:run  
 
 cd gateway
+
+mvn spring-boot:run  
+
+
+cd customer
+
 python policy-handler.py
 
 ## DDD 의 적용
