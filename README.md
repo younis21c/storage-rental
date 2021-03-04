@@ -311,6 +311,82 @@ http localhost:8081/storagecalls tel="01011115678" location="파주" status="호
 창고 관리 (storage manage) 이후 창고 할당(storage assign) 은 비동기식 처리이므로, 
 창고 신청 (storage call) 의 서비스 호출에는 영향이 없도록 구성
 
+Storagecall.java 내에서 서비스 Pub 구현
+```
+package storagecall;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.PostPersist;
+import javax.persistence.PreRemove;
+import javax.persistence.Table;
+
+import org.springframework.beans.BeanUtils;
+
+import storagecall.external.Storagemanage;
+import storagecall.external.StoragemanageService;
+
+@Entity
+@Table(name="Storagecall_table")
+public class Storagecall {
+
+    @Id
+    @GeneratedValue(strategy=GenerationType.AUTO)
+    private Long id;
+    private String tel;
+    private String startdate;
+    private String status; //호출,호출중,호출확정,호출취소
+    private Integer cost;
+    
+	
+    @PostPersist
+    public void onPostPersist(){
+
+    	System.out.println("휴대폰번호 " + getTel());
+        System.out.println("startdate " + getStartdate());
+        System.out.println("status " + getStatus());
+        System.out.println("cost " + getCost());
+
+    	if(getTel() != null)
+		{
+    		System.out.println("SEND###############################" + getId());
+			Storagemanage storagemanage = new Storagemanage();
+
+```
+
+storagecall 내 Policy Handler 에서 아래와 같이 Sub 구현
+
+```
+package storagecall;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.stream.annotation.StreamListener;
+import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.stereotype.Service;
+
+import storagecall.config.kafka.KafkaProcessor;
+
+@Service
+public class StoragecallPolicyHandler {
+	@Autowired
+	StoragecallRepository storagecallRepository;
+
+	@StreamListener(KafkaProcessor.INPUT)
+	public void onStringEventListener(@Payload String eventString) {
+
+	}
+
+	@StreamListener(KafkaProcessor.INPUT)
+	public void whenever할당확인됨_(@Payload StorageassignCompleted storageassignCompleted) {
+		System.out.println("##### EVT TYPE[StorageassignCompleted]  : " + storageassignCompleted.getEventType());
+		if (storageassignCompleted.isMe() && storageassignCompleted.getTel() != null) {
+		System.out.println("##### listener[StorageassignCompleted]  : " + storageassignCompleted.toJson());
+
+```
+
+
 <창고 신청 Storage call>
 창고 할당(storage assign) 서비스를 중단 후 창고신청
 
