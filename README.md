@@ -386,6 +386,8 @@ http localhost:8081/택시호출s 휴대폰번호="01012345678" 호출상태="�
 # 클라우드 배포/운영 파이프라인
 
 1. git에서 소스 가져오기
+
+
 git clone http://github.com/younis21c/storage-rental
 
 ```
