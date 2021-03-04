@@ -152,47 +152,25 @@
 
 # 구현:
 
-서비스를 로컬에서 실행하는 방법은 아래와 같다 
-각 서비스별로 bat 파일로 실행한다. 
+cd storagecall
+mvn spring-boot:run  
 
-```
-- run_taxicall.bat
-call setenv.bat
-REM java  -Xmx400M -Djava.security.egd=file:/dev/./urandom -jar food-delivery\app\target\app-0.0.1-SNAPSHOT.jar --spring.profiles.active=docker
-REM java  -Xmx400M -Djava.security.egd=file:/dev/./urandom -jar food-delivery\app\target\app-0.0.1-SNAPSHOT.jar --spring.profiles.active=default
-cd ..\taxiguider\taxicall
-mvn clean spring-boot:run
-pause ..
+cd storagemanage
+mvn spring-boot:run
 
-- run_taximanage.bat
-call setenv.bat
-REM java  -Xmx400M -Djava.security.egd=file:/dev/./urandom -jar food-delivery\pay\target\pay-0.0.1-SNAPSHOT.jar --spring.profiles.active=docker
-REM java  -Xmx400M -Djava.security.egd=file:/dev/./urandom -jar food-delivery\pay\target\pay-0.0.1-SNAPSHOT.jar --spring.profiles.active=default
-cd ..\taxiguider\taximanage
-mvn clean spring-boot:run
-pause ..
+cd storageassign
+mvn spring-boot:run 
 
-- run_taxiassign.bat
-call setenv.bat
-REM java  -Xmx400M -Djava.security.egd=file:/dev/./urandom -jar food-delivery\store\target\store-0.0.1-SNAPSHOT.jar --spring.profiles.active=docker
-REM java  -Xmx400M -Djava.security.egd=file:/dev/./urandom -jar food-delivery\store\target\store-0.0.1-SNAPSHOT.jar --spring.profiles.active=default
-cd ..\taxiguider\taxiassign
-mvn clean spring-boot:run
-pause ..
+cd customer
+mvn spring-boot:run  
 
-- run_customer.bat
-call setenv.bat
-SET CONDA_PATH=%ANACONDA_HOME%;%ANACONDA_HOME%\BIN;%ANACONDA_HOME%\condabin;%ANACONDA_HOME%\Library\bin;%ANACONDA_HOME%\Scripts;
-SET PATH=%CONDA_PATH%;%PATH%;
-cd ..\taxiguider_py\customer\
-python policy-handler.py 
-pause ..
-
-```
+cd gateway
+python policy-handler.py
 
 ## DDD 의 적용
-총 3개의 Domain 으로 관리되고 있으며, 택시요청(Taxicall) , 택시관리(TaxiManage), 택시할당(TaxiAssign) 으로 구성된다. 
+msaez.io 를 통해 구현한 Aggregate 단위의 Entity 선언 후, 구현을 진행하였다.
 
+Entity Pattern 과 Repository Pattern 을 적용하기 위해 Spring Data REST 의 RestRepository 를 적용하였다.
 
 ![DDD](https://user-images.githubusercontent.com/78134019/109460756-74ef5800-7aa4-11eb-8140-ec3ebb47a63f.jpg)
 
