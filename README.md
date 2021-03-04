@@ -386,11 +386,7 @@ public class StoragemanagePolicyHandler {
 
   git clone http://github.com/younis21c/storage-rental
 
-```
-리소스그룹 	skuser17-rsrcgrp
-쿠버네티스(aks)	skuser17-aks
-레지스트리(acr)	skuser17
-```
+
 2. Build
 ```
 cd gateway
