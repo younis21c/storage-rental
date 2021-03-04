@@ -233,13 +233,6 @@ http localhost:8088/storagecalls
 
 
 
-```
-# (app) 결제이력Service.java
-
-
-
-
-
 
 
 
