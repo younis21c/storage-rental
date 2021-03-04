@@ -239,75 +239,49 @@ http localhost:8088/storagecalls
 
 ## 동기식 호출과 Fallback 처리
 
-호출(taxicall)->택시관리(taximanage) 간의 호출은 동기식 일관성을 유지하는 트랜잭션으로 처리하였습니다.
+창고신청(storagecall)->창고관리(storagemanage) 간의 호출은 동기식 일관성을 유지하는 트랜잭션으로 처리하였습니다.
 호출 프로토콜은 이미 앞서 Rest Repository 에 의해 노출되어있는 REST 서비스를 FeignClient 를 이용하여 호출하도록 한다. 
 
-로컬 테스트를 위한 파일은 다음과 같이 구현 하였으며,
+
 ```
-# external > 택시관리Service.java
+# external > StoragemanageService.java
 
 
-package taxiguider.external;
+package storagerental.external;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-//@FeignClient(name="taximanage", url="http://localhost:8082")
-@FeignClient(name="taximanage", url="http://localhost:8082", fallback = 택시관리ServiceFallback.class)
-public interface 택시관리Service {
+@FeignClient(name="storagemanage", url="http://storagemanage:8080", fallback = StoragemanageServiceFallback.class)
+public interface StoragemanageService {
 
-    @RequestMapping(method= RequestMethod.POST, path="/택시관리s")
-    public void 택시할당요청(@RequestBody 택시관리 택시관리);
-
-}
-
-```
-
-클라우드 배포시 구현은 영문 클래스 해당 URL 호출은 다음과 같이 구현 하였습니다.
-
-```
-# external > TaximanageService.java
-
-
-package taxiguider.external;
-
-import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-
-//@FeignClient(name="taximanage", url="http://localhost:8082")
-//@FeignClient(name="taximanage", url="http://localhost:8082", fallback = TaximanageServiceFallback.class)
-@FeignClient(name="taximanage", url="http://taximanage:8080", fallback = TaximanageServiceFallback.class)
-public interface TaximanageService {
-
-    @RequestMapping(method= RequestMethod.POST, path="/taximanages")
-    public void requestTaxiAssign(@RequestBody Taximanage txMange);
+    @RequestMapping(method= RequestMethod.POST, path="/storagemanages")
+    public void requestStorageAssign(@RequestBody Storagemanage storageMange);
 
 }
 
 ```
 
-다음은 택시관리Service 인터페이스를 구현한 택시관리ServiceFallback 클래스이며, 클라우드 배포용 영문과 따로 구현 되었습니다.
+StoragemanageService 인터페이스를 구현한 StoragemanageServiceFallback 클래스.
 
 ```
-# external > 택시관리ServiceFallback.java
+# external > StoragemanageServiceFallback.java
 
 
-package taxiguider.external;
+package storagerental.external;
 
 import org.springframework.stereotype.Component;
 
 @Component
-public class 택시관리ServiceFallback implements 택시관리Service {
+public class StoragemanageServiceFallback implements StoragemanageService {
 	 
 	
 	@Override
-	public void 택시할당요청(택시관리 택시관리) {
+	public void StoragemanageAssigned(Storagemanage storageMange) {
 		// TODO Auto-generated method stub
-		System.out.println("Circuit breaker has been opened. Fallback returned instead. " + 택시관리.getId());
+		System.out.println("Circuit breaker has been opened. Fallback returned instead. " + Storagemanage.getId());
 	}
 
 }
@@ -320,42 +294,9 @@ public class 택시관리ServiceFallback implements 택시관리Service {
 ![2021-03-04_004922](https://user-images.githubusercontent.com/7607807/109832226-80e54080-7c83-11eb-9526-e1820a60c938.png)
 
 
-- 로컬 택시 할당요청
+창고 할당요청(영문)
 
-택시호출을 하면 택시관리에 택시 할당 요청을 다음과 같이 동기적으로 진행 합니다.
-```
-# 택시호출.java
-
- @PostPersist
-    public void onPostPersist(){    	
-    	System.out.println("휴대폰번호 " + get휴대폰번호());
-        System.out.println("호출위치 " + get호출위치());
-        System.out.println("호출상태 " + get호출상태());
-        System.out.println("예상요금 " + get예상요금());
-        //Following code causes dependency to external APIs
-        // it is NOT A GOOD PRACTICE. instead, Event-Policy mapping is recommended.   	
-    	if(get휴대폰번호() != null)
-		{
-    		System.out.println("SEND###############################" + getId());
-			택시관리 택시관리 = new 택시관리();
-	        
-			택시관리.setOrderId(String.valueOf(getId()));
-	        택시관리.set고객휴대폰번호(get휴대폰번호());
-	        if(get호출위치()!=null) 
-	        	택시관리.set호출위치(get호출위치());
-	        if(get호출상태()!=null) 
-	        	택시관리.set호출상태(get호출상태());
-	        if(get예상요금()!=null) 
-	        	택시관리.set예상요금(get예상요금());
-	        
-	        // mappings goes here
-	        TaxicallApplication.applicationContext.getBean(택시관리Service.class).택시할당요청(택시관리);
-		}
-```
-
-- 클라우드 배포시 택시 할당요청(영문)
-
-택시호출을 하면 택시관리에 택시 할당 요청을 다음과 같이 동기적으로 진행 합니다.
+창고신청을 하면 창고관리에 창고 할당 요청을 동기적으로 진행 합니다.
 ```
 # 택시호출.java
 
@@ -394,10 +335,10 @@ public void onPostPersist(){
 
 ![2021-03-04_005205](https://user-images.githubusercontent.com/7607807/109832649-e6393180-7c83-11eb-822f-bd41957e7a65.png)
 
-- 동기식 호출 적용으로 택시 관리 시스템이 정상적이지 않으면 , 택시콜도 접수될 수 없음을 다음과 같이 확인 할 수 있습니다.
+- 동기식 호출 적용으로 창고 관리 시스템이 정상적이지 않으면, 창고대여 신청할 수 없음을 다음과 같이 확인 할 수 있습니다.
 
 ```
-- 택시 관리 시스템 down 후 taxicall 호출 
+- 창고 관리 시스템 down 후 storagecall 호출 
 #taxicall
 
 C:\Users\Administrator>http localhost:8081/택시호출s 휴대폰번호="01012345678" 호출상태="호출"
@@ -407,7 +348,7 @@ C:\Users\Administrator>http localhost:8081/택시호출s 휴대폰번호="010123
 
 
 ```
-# 택시 관리 (taximanage) 재기동 후 호출
+# 창고관리 (storagemanage) 재기동 후 호출
 
 http localhost:8081/택시호출s 휴대폰번호="01012345678" 호출상태="호출"
 ```
@@ -421,65 +362,65 @@ http localhost:8081/택시호출s 휴대폰번호="01012345678" 호출상태="�
 
 ## 비동기식 호출 / 장애격리  / 성능
 
-택시 관리 (Taxi manage) 이후 택시 할당(Taxi Assign) 은 비동기식 처리이므로 , 
-택시 호출(Taxi call) 의 서비스 호출에는 영향이 없도록 구성 합니다.
+창고 관리 (storage manage) 이후 창고 할당(storage assign) 은 비동기식 처리이므로, 
+창고 신청 (storage call) 의 서비스 호출에는 영향이 없도록 구성
  
-고객이 택시 호출(Taxicall) 후 상태가 [호출]->[호출중] 로 변경되고 할당이 완료되면 [호출확정] 로 변경이 되지만 , 
-택시 할당(TaxiAssign)이 정상적이지 않으므로 [호출중]로 남게 됩니다. 
+고객이 창고 신청(Storagecall) 후 상태가 [호출]->[호출중] 로 변경되고 할당이 완료되면 [호출확정] 로 변경이 되지만 , 
+창고 할당(StorageAssign)이 정상적이지 않으므로 [호출중]로 남게 됩니다. 
 
-<고객 택시 호출 Taxi call>
+<고객 창고 신청 Storage call>
 ![비동기_호출2](https://user-images.githubusercontent.com/78134019/109468467-f4365900-7aaf-11eb-877a-049637b5ee6a.png)
 
-<택시 할당이 정상적이지 않아 호출중으로 남아있음>
+<창고 할당이 정상적이지 않아 호출중으로 남아있음>
 ![택시호출_택시할당없이_조회](https://user-images.githubusercontent.com/78134019/109471791-99ebc700-7ab4-11eb-924f-03715de42eba.png)
 
 
 
 ## 정보 조회 / View 조회
-고객은 택시가 할당되는 동안의 내용을 조회 할 수 있습니다.
+고객은 창고가 할당되는 동안의 내용을 조회 할 수 있습니다.
 
 ![고객View](https://user-images.githubusercontent.com/78134019/109483385-80ea1280-7ac2-11eb-9419-bf3ff5a0dbbc.png)
 
 
 ## 소스 패키징
 
-- 클라우드 배포를 위한 패키징 작업.
+- 클라우드 배포를 위해서 다음과 같이 패키징 작업을 하였습니다.
 ```
 cd gateway
 mvn clean && mvn package
 cd ..
-cd storagecall
+cd taxicall
 mvn clean && mvn package
 cd ..
-cd storagemanage
+cd taximanage
 mvn clean && mvn package
 cd ..
-cd storageassign
+cd taxiassign
 mvn clean && mvn package
 cd ..
 ```
 	
-<storagecall>
+<taxicall>
 	
 ![mvn_taxicall](https://user-images.githubusercontent.com/78134019/109744165-31682b80-7c15-11eb-9d94-7bc23efca6b6.png)
 
-<storagemanage>
+<taximanage>
 	
 ![mvn_taximanage](https://user-images.githubusercontent.com/78134019/109744195-3b8a2a00-7c15-11eb-9554-1c3ba088af52.png)
 
-<storageassign>
+<taxiassign>
 	
 ![mvn_taxiassign](https://user-images.githubusercontent.com/78134019/109744226-46dd5580-7c15-11eb-8b47-5100ed01e3ae.png)
 
 
 # 클라우드 배포/운영 파이프라인
 
-- 애저 클라우드에 배포하기 위한 주요 정보 설정
+- 애저 클라우드에 배포하기 위해서 다음과 같이 주요 정보를 설정 하였습니다.
 
 ```
-리소스 그룹명 : skuser17-rsrcgrp
-클러스터 명 : skuser17-aks
-레지스트리 명 : skuser17
+리소스 그룹명 : skccteam03-rsrcgrp
+클러스터 명 : skccteam03-aks
+레지스트리 명 : skccteam03
 ```
 
 - az login
@@ -495,7 +436,7 @@ cd ..
     "state": "Enabled",
     "tenantId": "6011e3f8-2818-42ea-9a63-66e6acc13e33",
     "user": {
-      "name": "skuser17@gkn2021hotmail.onmicrosoft.com",
+      "name": "skTeam03@gkn2021hotmail.onmicrosoft.com",
       "type": "user"
     }
   }
@@ -503,12 +444,12 @@ cd ..
 
 - 토큰 가져오기
 ```
-az aks get-credentials --resource-group skuser17-rsrcgrp --name skuser17-aks
+az aks get-credentials --resource-group skccteam03-rsrcgrp --name skccteam03-aks
 ```
 
 - aks에 acr 붙이기
 ```
-az aks update -n skuser17-aks -g skuser17-rsrcgrp --attach-acr skuser17
+az aks update -n skccteam03-aks -g skccteam03-rsrcgrp --attach-acr skccteam03
 ```
 
 ![aks붙이기](https://user-images.githubusercontent.com/78134019/109653395-540e2c00-7ba4-11eb-97dd-2dcfdf5dc539.jpg)
@@ -516,46 +457,34 @@ az aks update -n skuser17-aks -g skuser17-rsrcgrp --attach-acr skuser17
 - 네임스페이스 만들기
 
 ```
-kubectl create ns skuser17ns
+kubectl create ns team03
 kubectl get ns
 ```
 ![image](https://user-images.githubusercontent.com/78134019/109776836-5cb73e80-7c46-11eb-9562-d462525d6dab.png)
 
 * 도커 이미지 만들고 레지스트리에 등록하기
 ```
-cd gateway
-az acr build --registry skuser17 --image skuser17.azurecr.io/gateway:v1 .
+cd taxicall_eng
+az acr build --registry skccteam03 --image skccteam03.azurecr.io/taxicalleng:v1 .
+az acr build --registry skccteam03 --image skccteam03.azurecr.io/taxicalleng:v2 .
 cd ..
-cd storagecall
-az acr build --registry skuser17 --image skuser17.azurecr.io/storagecall:v1 .
+cd taximanage_eng
+az acr build --registry skccteam03 --image skccteam03.azurecr.io/taximanageeng:v1 .
 cd ..
-cd storagemanage
-az acr build --registry skuser17 --image skuser17.azurecr.io/storagemanage:v1 .
+cd taxiassign_eng
+az acr build --registry skccteam03 --image skccteam03.azurecr.io/taxiassigneng:v1 .
 cd ..
-cd storageassign
-az acr build --registry skuser17 --image skuser17.azurecr.io/storageassign:v1 .
+cd gateway_eng
+az acr build --registry skccteam03 --image skccteam03.azurecr.io/gatewayeng:v1 .
 cd ..
 cd customer_py
-az acr build --registry skuser17 --image skuser17.azurecr.io/customer-policy-handler:v1 .
+az acr build --registry skccteam03 --image skccteam03.azurecr.io/customer-policy-handler:v1 .
 ```
-
-![docker_gateway](https://user-images.githubusercontent.com/78134019/109777813-76a55100-7c47-11eb-8d8d-59eaabefab54.png)
-
-![docker_taxiassign](https://user-images.githubusercontent.com/78134019/109777820-77d67e00-7c47-11eb-9d77-85403dcf2da4.png)
-
-![docker_taxicall](https://user-images.githubusercontent.com/78134019/109777826-786f1480-7c47-11eb-9992-41f75907d16f.png)
-
-![docker_taximanage](https://user-images.githubusercontent.com/78134019/109777827-786f1480-7c47-11eb-9c9b-d3357eda0bd5.png)
-
-![docker_customer](https://user-images.githubusercontent.com/78134019/109777829-7907ab00-7c47-11eb-936f-723396cb272a.png)
+![ACR](https://user-images.githubusercontent.com/78134087/109985823-85276180-7d48-11eb-9859-f369c0a2c1af.JPG)
 
 
 -각 마이크로 서비스를 yml 파일을 사용하여 배포 합니다.
-
-
-![deployment_yml](https://user-images.githubusercontent.com/78134019/109652001-9171ba00-7ba2-11eb-8c29-7128ceb4ec97.jpg)
-
-- deployment.yml로 서비스 배포
+deployment.yml로 서비스 배포
 ```
 cd gateway/kubernetes
 kubectl apply -f deployment.yml --namespace=skuser17ns
@@ -575,34 +504,14 @@ cd ../../
 cd storageassign/kubernetes
 kubectl apply -f deployment.yml --namespace=skuser17ns
 kubectl apply -f service.yaml --namespace=skuser17ns
-
 ```
-<Deploy cutomer>
-	
-![deploy_customer](https://user-images.githubusercontent.com/78134019/109744443-a471a200-7c15-11eb-94c9-a0c0a7999d04.png)
-
-<Deploy gateway>
-	
-![deploy_gateway](https://user-images.githubusercontent.com/78134019/109744457-acc9dd00-7c15-11eb-8502-ff65e779e9d2.png)
-
-<Deploy taxiassign>
-	
-![deploy_taxiassign](https://user-images.githubusercontent.com/78134019/109744471-b3585480-7c15-11eb-8d68-bba9c3d8ce01.png)
-
-<Deploy taxicall>
-	
-![deploy_taxicall](https://user-images.githubusercontent.com/78134019/109744487-bb17f900-7c15-11eb-8bd0-ff0a9fc9b2e3.png)
-
-
-![deploy_taximanage](https://user-images.githubusercontent.com/78134019/109744591-e69ae380-7c15-11eb-834a-44befae55092.png)
-
-
 
 - 서비스확인
 ```
 kubectl get all
 ```
-![image](https://user-images.githubusercontent.com/78134019/109777026-9be58f80-7c46-11eb-9eac-a55ebcf91989.png)
+![배포확인](https://user-images.githubusercontent.com/78134087/109986206-e0f1ea80-7d48-11eb-91c1-77f215307fcb.JPG)
+
 
 
 
