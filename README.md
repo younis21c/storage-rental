@@ -452,10 +452,11 @@ kubectl apply -f deployment.yml --namespace=skuser17ns
 kubectl apply -f service.yaml --namespace=skuser17ns
 ```
 
-서비스 배포 확인
+Kubectl 결과 확인
 
 
 ![배포확인](https://user-images.githubusercontent.com/78134087/109987592-1ba85280-7d4a-11eb-8e39-ed2af488f677.JPG)
+
 
 
 
