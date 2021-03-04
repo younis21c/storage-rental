@@ -7,10 +7,9 @@
 1. 고객이 필요한 규격과 대여기간을 선택하고 창고대여를 신청한다
 2. 비어있는 창고를 확인하여 창고할당을 한다
 3. 할당되면 고객에게 대여신청 확정정보를 전달한다.
-
 4. 고객은 창고대여 신청을 취소할 수 있다.
 5. 대여신청이 취소되면 할당된 창고도 취소된다
-6. 고객이 창고대여신청 현황을 확인할 수 있다
+
 
 
 ## 비기능적 요구사항
@@ -20,7 +19,7 @@
 - 대여 신청은 창고 할당 기능이 동작하지 않더라도, 365일 24시간 받을 수 있어야 한다 Async (event-driven), Eventual Consistency
 - 창고 할당 요청이 과중되면 대여신청을 잠시동안 받지 않고 잠시 후에 하도록 유도한다 Circuit breaker, fallback
 3. 성능
-- 고객은 창고신청상태를 확인 할 수 있어야 한다. CQRS, Event driven
+- 고객은 창고신청상태를 확인할 수 있어야 한다. CQRS, Event driven
 
 
 
@@ -67,45 +66,51 @@
 	
 
 ### 액터, 커맨드 부착하여 읽기 좋게
-![04액터](https://user-images.githubusercontent.com/78134087/109808951-16280b00-7c6b-11eb-8726-067ced0f05df.JPG)
+![04](https://user-images.githubusercontent.com/78134087/110018426-9d0fdd00-7d6a-11eb-8596-99d020006329.JPG)
+
 
 
 ### 어그리게잇으로 묶기
-![05](https://user-images.githubusercontent.com/78134087/109808969-1b855580-7c6b-11eb-93fe-55a35a56b667.JPG)
+![05어그리](https://user-images.githubusercontent.com/78134087/110018446-a1d49100-7d6a-11eb-8b3f-4bceeee475e5.JPG)
 
-창고신청, 창고관리, 창고할당 어그리게잇을 생성하고 그와 연결된 command 와 event 들에 의하여 트랜잭션이 유지되어야 하는 단위로 그들 끼리 묶어줌 
+
+창고신청, 창고관리, 창고할당 어그리게잇을 생성하고 그와 연결된 command 와 event 들에 의하여 트랜잭션이 유지되어야 하는 단위로 그들 끼리 묶어줌 ![06바운디드](https://user-images.githubusercontent.com/78134087/110018479-ac8f2600-7d6a-11eb-9a4b-c2e7a629746f.JPG)
+
 
 
 ### 바운디드 컨텍스트로 묶기
-![06바운디드](https://user-images.githubusercontent.com/78134087/109809053-335cd980-7c6b-11eb-8643-c908d29c6506.JPG)
+![Uploading 06바운디드.JPG…]()
 
 
 
 ### 폴리시 부착 (괄호는 수행주체, 폴리시 부착을 둘째단계에서 해놔도 상관 없음. 전체 연계가 초기에 드러남)
 
-![07](https://user-images.githubusercontent.com/78134087/109809089-3d7ed800-7c6b-11eb-95ae-b8d6785f3364.JPG)
+![07](https://user-images.githubusercontent.com/78134087/110018510-b1ec7080-7d6a-11eb-9fd9-b8f84a5e412a.JPG)
+
 
 
 ### 폴리시의 이동
 
-![08이동](https://user-images.githubusercontent.com/78134087/109809105-42dc2280-7c6b-11eb-9c1f-5821808e8587.JPG)
+![08](https://user-images.githubusercontent.com/78134087/110018524-b749bb00-7d6a-11eb-8afa-db611582f5c8.JPG)
+
 
 
 ### 컨텍스트 매핑 (점선은 Pub/Sub, 실선은 Req/Resp)
+![09](https://user-images.githubusercontent.com/78134087/110018547-bdd83280-7d6a-11eb-958f-4df9706800bc.JPG)
 
-![09](https://user-images.githubusercontent.com/78134087/109809115-47084000-7c6b-11eb-9ed2-b73f100e53d2.JPG)
 
 
 
 
 ### 완성된 모형
 
-![10완성](https://user-images.githubusercontent.com/78134087/109900159-3fcc4b00-7cda-11eb-8dfb-73dae0c302c9.JPG)
+![10완성](https://user-images.githubusercontent.com/78134087/110018567-c2045000-7d6a-11eb-95cb-975b3e120848.jpg)
+
 
 
 
 ### 기능적 요구사항 검증
-![11기능](https://user-images.githubusercontent.com/78134087/109900164-422ea500-7cda-11eb-8152-0eb228741831.JPG)
+![11기능검증](https://user-images.githubusercontent.com/78134087/110018593-c6c90400-7d6a-11eb-9c30-431a3e3a970f.JPG)
 
 
 #### 신청case (red)
@@ -116,7 +121,6 @@
 5. 고객이 상태변경을 확인한다.(ok)
 
 
-
 #### 취소case (blue)
 1. 고객이 신청한 창고대여를 취소요청한다.(ok)
 2. 창고관리 시스템이 창고 할당 취소를 요청한다.(ok)
@@ -125,13 +129,10 @@
 5. 고객이 상태변경을 확인한다.(ok)
 
 
-#### 확인case (black)
-1. 고객이 신청 진행내역을 볼 수 있어야 한다. (ok) 
-
-
 
 ### 비기능 요구사항 검증
-![12비기능](https://user-images.githubusercontent.com/78134087/109900192-4ce93a00-7cda-11eb-9bca-9fc019aed69c.JPG)
+![13비기능](https://user-images.githubusercontent.com/78134087/110018777-05f75500-7d6b-11eb-836b-6f89175fd4fb.JPG)
+
 
 
 마이크로 서비스를 넘나드는 시나리오에 대한 트랜잭션 처리
@@ -151,7 +152,7 @@
 
 ## 헥사고날 아키텍처 다이어그램 도출 (Polyglot)
 
-![hsqldb](https://user-images.githubusercontent.com/78134087/109930212-bb45f080-7d0a-11eb-8420-e8a8db855068.JPG)
+![15헥사](https://user-images.githubusercontent.com/78134087/110018791-0a237280-7d6b-11eb-8c9f-b585f7e34fee.JPG)
 
 
 
@@ -180,9 +181,6 @@ cd gateway
 mvn spring-boot:run  
 
 
-cd customer
-
-python policy-handler.py
 
 ## DDD 의 적용
 msaez.io 를 통해 구현한 Aggregate 단위의 Entity 선언 후, 구현을 진행하였다.
