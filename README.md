@@ -312,15 +312,11 @@ http localhost:8081/storagecalls tel="01011115678" location="파주" status="호
 창고 관리 (storage manage) 이후 창고 할당(storage assign) 은 비동기식 처리이므로, 
 창고 신청 (storage call) 의 서비스 호출에는 영향이 없도록 구성
  
-고객이 창고 신청(Storagecall) 후 상태가 [호출]->[호출중] 로 변경되고 할당이 완료되면 [호출확정] 로 변경이 되지만 , 
-창고 할당(StorageAssign)이 정상적이지 않으므로 [호출중]로 남게 됩니다. 
+고객이 창고 신청(Storagecall) 후 서비스 진행은 정상이나 호출확정이 되지 않고  
+창고 할당(StorageAssign)이 정상적이지 않아 으므로 진행중으로 남게 됨
 
-<고객 창고 신청 Storage call>
-![비동기_호출2](https://user-images.githubusercontent.com/78134019/109468467-f4365900-7aaf-11eb-877a-049637b5ee6a.png)
-
-<창고 할당이 정상적이지 않아 호출중으로 남아있음>
-![택시호출_택시할당없이_조회](https://user-images.githubusercontent.com/78134019/109471791-99ebc700-7ab4-11eb-924f-03715de42eba.png)
-
+<창고 신청 Storage call>
+![pubsub1](https://user-images.githubusercontent.com/78134087/110006595-2fa97f80-7d5d-11eb-85c9-0bc9d78a61c8.JPG)
 
 
 ## 정보 조회 / View 조회
