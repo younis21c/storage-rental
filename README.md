@@ -222,26 +222,20 @@ gateway > applitcation.yml 설정
 
 ![gw](https://user-images.githubusercontent.com/78134087/109932531-a9b21800-7d0d-11eb-993e-27659398806d.JPG)
 
----테스트 실패!!!!
-
-
 
 gateway 테스트
-
 ```
 http localhost:8080/storagecalls
 -> gateway 를 호출하나 8081 로 호출됨
 
-
---- 추후 변경 필요
-![gateway_3](https://user-images.githubusercontent.com/78134019/109480424-da504280-7abe-11eb-988e-2a6d7a1f7cea.png)
-
-
+----테스트 실패!!  HELP!!!
 
 ## 동기식 호출과 Fallback 처리
 
-창고신청(storagecall)->창고관리(storagemanage) 간의 호출은 동기식 일관성을 유지하는 트랜잭션으로 처리.
-호출 프로토콜은 이미 앞서 Rest Repository 에 의해 노출되어있는 REST 서비스를 FeignClient 를 이용하여 호출하도록 한다. 
+
+
+
+
 
 
 
