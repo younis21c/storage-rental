@@ -472,19 +472,9 @@ Kubectl 결과 확인
 
 
 - seige 실행
-```
-siege -c100 -t120S -r10 -v --content-type "application/json" 'http://storagecall:8080/storagecalls POST {"tel": "01012341234"}'
-```
 
 
 - Availability: 100.00 % 확인
-
-
-![무정지 배포2](https://user-images.githubusercontent.com/78134019/109810318-bd597200-7c6c-11eb-88e4-197386b1e338.png)
-
-
-![무정지 배포3](https://user-images.githubusercontent.com/78134019/109810688-2fca5200-7c6d-11eb-9c67-d252d703064a.png)
-
 
 
 ## Config Map
