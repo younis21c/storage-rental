@@ -419,7 +419,7 @@ Kubectl 결과 확인
 
 - seige 실행
 ```
-siege -c100 -t120S -r10 -v --content-type "application/json" 'http://20.194.36.201:8080/taxicalls POST {"tel": "0101231234"}'
+siege -c100 -t120S -r10 -v --content-type "application/json" 'http://storage:8080/storagecalls POST {"tel": "0101231234"}'
 ```
 
 
