@@ -385,8 +385,15 @@ public class StoragemanagePolicyHandler {
 
   git clone http://github.com/younis21c/storage-rental
 
+2. az 작업하기
+```
+login
+리소스그룹 :	skuser17-rsrcgrp
+쿠버네티스(aks) : skuser17-aks
+레지스트리(acr) : skuser17
+```
 
-2. Build
+3. Build
 ```
 cd gateway
 mvn clean && mvn package
@@ -401,7 +408,7 @@ cd storageassign
 mvn clean && mvn package
 ```
 
-3. Dockerlizing, ACR(Azure Container Registry에 Docker Image Push
+4. Dockerlizing, ACR(Azure Container Registry에 Docker Image Push
 ```
 cd gateway
 az acr build --registry skuser17 --image skuser17.azurecr.io/gateway:v1 .
@@ -423,7 +430,7 @@ ACR에 정상적으로 push되었음을 확인
 ![ACR](https://user-images.githubusercontent.com/78134087/109987442-f87da300-7d49-11eb-8345-5bba6f3fcca2.JPG)
 
 
-4. Kubernetes에서 Deploy
+5. Kubernetes에서 Deploy (deployment.yml 파일에서 도커이미지 이름 변경 필요)
 ```
 cd gateway/kubernetes
 kubectl apply -f deployment.yml --namespace=skuser17ns
