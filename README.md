@@ -482,7 +482,7 @@ siege 종료: Ctrl + C -> exit
 동시사용자 100명 60초 동안 실시
 
 
-siege -c100 -t60S -r10 -v --content-type "application/json" 'storagecall:8080/storagecalls/ POST {"tel": "01023456789", "cost":30000}'
+siege -c100 -t60S -r10 -v --content-type "application/json" '20.194.21.97:8080/storagecalls/ POST {"tel": "01023456789", "cost":30000}'
 
 부하 발생하여 CB가 발동하여 요청 실패처리 하였고, 밀린 부하가 storagemanage 에서 처리되면서 다시 storagecall 받기 시작
  
