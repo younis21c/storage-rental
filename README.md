@@ -502,7 +502,7 @@ report
 ![캡처2](https://user-images.githubusercontent.com/78134087/110044285-356a8980-7d8c-11eb-850b-05d823e76f5f.JPG)
 
 
-CB 확인
+CB 적용 확인
 
 
 ### 오토스케일 아웃
