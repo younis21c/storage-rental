@@ -484,8 +484,8 @@ siege 종료: Ctrl + C -> exit
 
 siege -c100 -t60S -r10 -v --content-type "application/json" 'storagecall:8080/storagecalls/ POST {"tel": "01023456789", "cost":30000}'
 
-부하 발생하여 CB가 발동하여 요청 실패처리하였고, 밀린 부하가 pay에서 처리되면서 다시 order를 받기 시작
-
+부하 발생하여 CB가 발동하여 요청 실패처리 하였고, 밀린 부하가 storagemanage 에서 처리되면서 다시 storagecall 받기 시작
+ 
 ![캡처1](https://user-images.githubusercontent.com/78134087/110044269-300d3f00-7d8c-11eb-8ea3-c60ca8587f42.JPG)
 
 
@@ -494,7 +494,7 @@ report
 ![캡처2](https://user-images.githubusercontent.com/78134087/110044285-356a8980-7d8c-11eb-850b-05d823e76f5f.JPG)
 
 
-CB 잘 적용됨을 확인
+CB 확인
 
 
 ### 오토스케일 아웃
