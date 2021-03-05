@@ -111,7 +111,7 @@
 
 
 ### 기능적 요구사항 검증
-![11비기능](https://user-images.githubusercontent.com/78134087/110057663-56d76f80-7da4-11eb-9198-87bda941eee3.JPG)
+![11기능검증](https://user-images.githubusercontent.com/78134087/110057998-e715b480-7da4-11eb-806e-e385bb499297.JPG)
 
 
 
