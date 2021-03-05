@@ -511,16 +511,30 @@ CB 확인
 
 ## 무정지 재배포
 
-- deployment.yml에 readiness 옵션을 추가 
+무정지 재배포가 100% 되는 것인지 확인하기 위해서 Autoscale 이나 CB 설정을 제거하여 진행
+siege 로 배포작업 직전에 워크로드를 모니터링 
 
-![무정지배포1](https://user-images.githubusercontent.com/78134087/110012102-8023db80-7d63-11eb-9d15-c366ec82d181.JPG)
+```
+siege -c100 -t60S -r10 -v http get http://storageassign:8080/storageassigns
+```
+readiness 옵션이 없는 경우 배포 중 서비스 요청처리 시
+
+![무정지배포1](https://user-images.githubusercontent.com/78134087/110077921-53ef7580-7dca-11eb-90d8-c824ebbaac5d.JPG)
 
 
+readiness적용된 deployment.yml 적용, 신규 버전의 이미지로 교체
+```
+kubectl apply -f deployment.yml
+cd ..
+az acr build --registry skuser17 --image skuser17.azurecr.io/storageassign:v6 .
+kubectl set image deploy storageassign storageassign=skuser17.azurecr.io/storageassign:v6 -n skuser17ns
+```
+![무정지배포2](https://user-images.githubusercontent.com/78134087/110078381-00315c00-7dcb-11eb-8f37-a0ad284fb774.JPG)
 
-- seige 실행
 
+Availability: 100 % 확인
 
-- Availability: 100.00 % 확인
+![무정지배포9](https://user-images.githubusercontent.com/78134087/110078719-7fbf2b00-7dcb-11eb-8c40-b452419ac56d.JPG)
 
 
 ## Config Map
